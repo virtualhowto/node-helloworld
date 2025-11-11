@@ -1,0 +1,41 @@
+name: Build and Deploy Node App (Self-Hosted) - hello
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-deploy:
+    name: Build and Deploy Docker Stack
+    runs-on: self-hosted
+
+    steps:
+      # 1️⃣  Check out the latest code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2️⃣  Validate docker-compose.yml exists
+      - name: Validate docker-compose.yml presence
+        run: |
+          if [ ! -f docker-compose.yml ]; then
+            echo "::error ::docker-compose.yml not found in repository root. Workflow cannot continue."
+            exit 1
+          fi
+
+      # 3️⃣  Build Docker image locally on the self-hosted runner
+      - name: Build Docker image
+        run: |
+          docker build -t ${GITHUB_REPOSITORY##*/}:latest .
+
+      # 4️⃣  Deploy using existing docker-compose.yml
+      - name: Deploy Docker stack
+        run: |
+          echo "Using docker-compose.yml to deploy..."
+          docker compose down || true
+          docker compose up -d --build
+
+      # 5️⃣  Optional: Clean up old images to free space
+      - name: Clean up old images
+        run: |
+          docker image prune -af || true
