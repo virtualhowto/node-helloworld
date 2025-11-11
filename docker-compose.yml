@@ -1,0 +1,21 @@
+services:
+  hello:
+    build: .
+    container_name: hello
+    ports:
+      - 3000:3000
+    networks:
+      - t3_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.constraint=proxy-public"
+      - "traefik.http.routers.hello.rule=Host(`hello.virtualhowto.com`)"
+      - "traefik.http.routers.hello.entrypoints=websecure"
+      - "traefik.http.routers.hello.tls=true"
+      - "traefik.http.services.hello.loadbalancer.server.port=3000"
+      # Optional: middleware (e.g. Authentik)
+      # - "traefik.http.routers.hello-node.middlewares=chain-authentik@file"
+
+networks:
+  t3_proxy:
+    external: true
