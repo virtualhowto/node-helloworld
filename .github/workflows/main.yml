@@ -1,5 +1,4 @@
 name: Build and Deploy Node App (Self-Hosted) - hello
-
 on:
   push:
     branches:
