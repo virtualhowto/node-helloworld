@@ -1,6 +1,6 @@
 services:
   hello:
-    build: ./Dockerfile
+    build: .
     container_name: hello
     ports:
       - 3000:3000
