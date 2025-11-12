@@ -25,7 +25,7 @@ jobs:
       # 3️⃣  Build Docker image locally on the self-hosted runner
       - name: Build Docker image
         run: |
-          docker build -t ${GITHUB_REPOSITORY##*/}:latest  -f Dockerfile .
+          docker build -t ${GITHUB_REPOSITORY##*/}:latest -f Dockerfile .
           
 
       # 4️⃣  Deploy using existing docker-compose.yml
